@@ -8,8 +8,9 @@ namespace lab2 {
         allocated_length = 0;
         data = nullptr;
         //data = new std::string[allocated_length]; //generate the pt to memory
-    }
 
+
+    }
     stringVector::~stringVector(){
         //if (data != nullptr){ //deallocate memory
             delete[] data;
@@ -36,12 +37,12 @@ namespace lab2 {
 
         }
         allocated_length = new_size;
+        delete[] data;
         data = str;
 
         if(length > new_size){
             length = new_size;
-    }
-        delete[] str;
+        }
     }
 
 
@@ -54,54 +55,16 @@ namespace lab2 {
 
     }
     void stringVector::append(std::string new_data) {
-        std::string *str = new std::string[allocated_length];
-        //string *str = nullptr;
-
-        if(length == allocated_length) {
-
-            if (allocated_length == 0) {
-                delete[] data;
-                data = new std::string[1];
-                allocated_length = allocated_length + 1;
-            } else if (allocated_length > 0) {
-                str = new std::string[2 * allocated_length];
-                for (int i = 0; i < length; i++) {
-                    str[i] = data[i];
-                }
-            }
-
-            allocated_length = allocated_length * 2;
-
-            delete[] data;
-            data = new std::string[allocated_length];
-
-            for (int i = 0; i < length; i++) {
-                data[i] = str[i];
-            }
+        if (allocated_length == 0) {
+            reserve(1);
+        } else if (allocated_length == length) {
+            reserve(allocated_length * 2);
         }
-
-        data[length] = new_data;
+        data[length] = new_data; //adding new data
         length++;
 
-        delete [] str;
-        /*if(length == allocated_length){
-            if(allocated_length == 0){
-                allocated_length = 1;
-                data = new std::string[allocated_length];
-                data[0] = new_data;
-            }
-            else if(allocated_length > length){
-                data[length] = new_data;
-            }
-            else{
-                reserve(allocated_length * 2);
-                data[length] = new_data;
-            }
-            }
-        length++;*/
-        }
 
-
+    }
         //case1: if capacity is 0 set to 1
         //case2: over capacity = double array
 
@@ -127,9 +90,7 @@ namespace lab2 {
 
         for (int i = 0; i < allocated_length; i++)
         {
-            std::cout << rhs.data[i] << std::endl;
             this->data[i] = rhs.data[i];
-            std::cout << data[i] << std::endl;
         }
         //stringVector *lhs = new stringVector(); //create a new array
         //reserve(rhs.allocated_length);
