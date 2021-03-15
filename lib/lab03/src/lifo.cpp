@@ -54,7 +54,8 @@ namespace lab3{
         /*if(index == lifo_storage.capacity()){
             lifo_storage.reserve(lifo_storage.capacity());
         }*/
-        lifo_storage.append(input);
+        lifo_storage.append("");
+        lifo_storage[index]=input;
         index++;
     }
 
@@ -62,7 +63,24 @@ namespace lab3{
         if(size()==0){
             throw -1;
         }
+
         //if(index >= 0)
         index--;
+        /*if(index >= 0)
+        {
+            //lifo_storage.reserve(lifo_storage.size()-1);
+
+            lab3::lifo n;
+
+            for(int i = 0; i < lifo_storage.size()-1; i++)
+            {
+                n.push(lifo_storage[i]);
+            }
+
+            lifo_storage = n.lifo_storage;
+
+            index--;
+        }*/
+
     }
 }

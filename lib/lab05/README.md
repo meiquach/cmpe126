@@ -1,7 +1,6 @@
 # Lab 5: Linked List #
 **10 points**
 
-**Due 6 March, 2018**
 
 This lab is a continuation of your previous 4 labs, but in this lab we will be swapping out the `stringVector` you wrote with a linked list. A linked list is a data structure that connects nodes together in a line, and the only way to  get to a particular node it to traverse down the line until you find it. Linked lists are useful because they allow us to insert or delete at certain places in O(1) time. 
 

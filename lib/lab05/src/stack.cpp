@@ -5,10 +5,12 @@ namespace lab5{
     }
 
     stack::stack(std::string &data) {
-
+        storage_structure.append(data);
     }
 
     stack::stack(const stack &original) {
+
+
 
     }
 

@@ -21,6 +21,7 @@ public:
 TEST(crash_test,crash_test_calculator_Test){
     lab4::calculator *calc_underTest=new lab4::calculator;
     delete calc_underTest;
+    //std::string input("1 + 2 + 3 - 3 - 2 - 1");
     std::string input("1 + 2");
     calc_underTest=new lab4::calculator(input);
     delete calc_underTest;
@@ -115,6 +116,7 @@ TEST_F(Lab04Fixture, calculator_istream_ostream_test) {
     testing::internal::CaptureStdout();
     std::cout << *calculator_UT;
     output = testing::internal::GetCapturedStdout();
+    //std::string output = testing::internal::GetCapturedStdout();
 
     EXPECT_EQ("Infix: 49,*,(,17,*,(,3,+,2,*,(,12,+,2,*,(,45,-,43,),+,2,),),+,1,*,(,6,/,2,),)\nPostfix: 49,17,3,2,12,2,45,43,-,*,+,2,+,*,+,*,1,6,2,/,*,+,*",output);
 
