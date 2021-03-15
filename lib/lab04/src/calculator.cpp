@@ -16,6 +16,7 @@ namespace lab4 {
 
     void calculator::parse_to_infix(std::string &input_expression) {
         lab1::expressionstream input(input_expression);
+        infix_expression = lab3::fifo();
         //keep looping till we reach the end
         while (input.get_current_token() != "\0") {
             infix_expression.enqueue((input.get_current_token()));
@@ -31,6 +32,7 @@ namespace lab4 {
 
     void calculator::convert_to_postfix(lab3::fifo infix_expression) {
         lab3::lifo Stack; //Create a stack
+        postfix_expression = lab3::fifo();
 
         while(infix_expression.is_empty() == false) {
             //std::string c=infix_expression.top();
@@ -80,7 +82,9 @@ namespace lab4 {
     }
 
     std::istream &operator>>(std::istream &stream, calculator &RHS) {
-        //do sth
+        std::string t ="";
+        getline(stream, t);
+        RHS.parse_to_infix(t);
         return stream;
     }
 
