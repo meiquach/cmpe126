@@ -16,7 +16,7 @@ namespace lab4 {
 
     void calculator::parse_to_infix(std::string &input_expression) {
         lab1::expressionstream input(input_expression);
-        infix_expression = lab3::fifo();
+        infix_expression = lab3::fifo(); //get input at the start
         //keep looping till we reach the end
         while (input.get_current_token() != "\0") {
             infix_expression.enqueue((input.get_current_token()));
@@ -63,7 +63,7 @@ namespace lab4 {
             }
             infix_expression.dequeue();
         }
-        while(!Stack.is_empty()){
+        while(!Stack.is_empty()){ //solve the last element take-in problem
             postfix_expression.enqueue(Stack.top());
             Stack.pop();
         }

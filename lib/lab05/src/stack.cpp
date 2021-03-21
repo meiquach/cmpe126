@@ -5,13 +5,13 @@ namespace lab5{
     }
 
     stack::stack(std::string &data) {
-        storage_structure.append(data);
+        storage_structure.insert(data);
     }
 
     stack::stack(const stack &original) {
-
-
-
+        for (int i = 0; i < storage_structure.listSize(); i++) {
+            storage_structure.insert(original.storage_structure.get_value_at(i));
+        }
     }
 
     stack::~stack() {
@@ -20,25 +20,37 @@ namespace lab5{
 
     stack &stack::operator=(const stack &RHS) {
         //return <#initializer#>;
+        storage_structure = RHS.storage_structure;
     }
 
     bool stack::isEmpty() const {
-        return false;
+        if(storage_structure.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     unsigned stack::stackSize() const {
-        return 0;
+        if(storage_structure.listSize() == 0){
+            return 0;
+        }else{
+            return storage_structure.listSize();
+        }
     }
 
     std::string stack::top() const {
         //return std::__cxx11::string();
+        return storage_structure.get_value_at(0);
     }
 
     void stack::push(const std::string &data) {
+        storage_structure.insert(data);
 
     }
 
     void stack::pop() {
+        storage_structure.remove();
 
     }
 
