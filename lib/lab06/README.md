@@ -1,7 +1,7 @@
 # Lab 6: Linked List #
 **10 points**
 
-**Due 13 March, 2018**
+**Due 11 April, 2021**
 
 This assignment you will be implementing a fancy linked list, called a doubly linked list. The only difference between this linked list, and the linked list that you created last lab is that the nodes have pointers to both *next* and *prev*. This means that you can now traverse the list in either direction.
 
