@@ -202,6 +202,7 @@ namespace lab6{
             temp = temp->next;
             counter++;
         }
+        
         node* temp2 = temp;
         for (int i = position_1; i < position_2; i++){
             split_set.append(temp2->get_data());
