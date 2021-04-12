@@ -31,12 +31,11 @@ namespace lab5 {
         while(head != nullptr){
             remove(0);
         }
-
     }
 
     linked_list &lab5::linked_list::operator=(const linked_list &RHS) {
         //return <#initializer#>;
-        while(head != nullptr){
+        /*while(head != nullptr){
             remove(0);
         }
         head = nullptr;
@@ -48,6 +47,18 @@ namespace lab5 {
             append(tmp->data);
             tmp = tmp->next;
         }
+            return *this;*/
+
+        // Clear this linked list if it's not empty
+        while (head != nullptr) {
+            remove(0);
+        }
+
+        // Append the data from each node in the other linked list to this linked list, starting at the head
+        for (node *currentNode = RHS.head; currentNode != nullptr; currentNode = currentNode->next) {
+            append(currentNode->data);
+        }
+
         return *this;
     }
 
@@ -58,7 +69,7 @@ namespace lab5 {
     }
 
     unsigned linked_list::listSize() const {
-        node *tmp;
+        /*node *tmp;
         int x = 1;
 
         tmp = head;
@@ -71,8 +82,13 @@ namespace lab5 {
                 tmp = tmp->next;
             }
         }
-
-        return x;
+        return x;*/
+        // Traverse the linked list and count the nodes
+        unsigned count = 0;
+        for (node *tmp = head; tmp != nullptr; tmp = tmp->next) {
+            count++;
+        }
+        return count;
     }
 
     void linked_list::insert(const std::string input, unsigned int location) {
