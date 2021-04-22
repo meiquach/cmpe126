@@ -7,13 +7,14 @@ namespace lab6{
 
     }
 
-    doubly_linked_list::doubly_linked_list(int input) {
+    doubly_linked_list::doubly_linked_list(int input):doubly_linked_list() {
         append(input);
     }
 
     doubly_linked_list::doubly_linked_list(std::vector<int> vector_input) : doubly_linked_list() {
-        for (int num : vector_input) append(num);
-
+        //convert a vector into a linked list
+        for (int num : vector_input)
+            append(num);
     }
 
     doubly_linked_list::doubly_linked_list(const doubly_linked_list &original) {
@@ -27,15 +28,17 @@ namespace lab6{
             copy1->prev = copy;
             copy = copy1;
         }
-
     }
 
     doubly_linked_list::~doubly_linked_list() { //delete every single nodes
-        node *temp;
+        /*node *temp;
         while (head) {
             temp = head;
             head = head->next;
             delete temp;
+        }*/
+        while(head != nullptr){
+            remove(0);
         }
     }
 
@@ -202,7 +205,7 @@ namespace lab6{
             temp = temp->next;
             counter++;
         }
-        
+
         node* temp2 = temp;
         for (int i = position_1; i < position_2; i++){
             split_set.append(temp2->get_data());

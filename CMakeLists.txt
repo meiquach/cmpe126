@@ -36,7 +36,7 @@ add_subdirectory(lib/lab03 lab3_lib)
 add_subdirectory(lib/lab04 lab4_lib)
 add_subdirectory(lib/lab05 lab5_lib)
 add_subdirectory(lib/lab06 lab6_lib)
-#add_subdirectory(lib/lab07 lab7_lib)
+add_subdirectory(lib/lab07 lab7_lib)
 #add_subdirectory(lib/lab08 lab8_lib)
 
 add_subdirectory(test)
@@ -48,6 +48,6 @@ target_link_libraries(labs_main
         lab4_lib
         lab5_lib
         lab6_lib
-        #lab7_lib
+        lab7_lib
         #lab8_lib
         )
