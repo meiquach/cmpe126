@@ -4,7 +4,6 @@ namespace lab6{
     doubly_linked_list::doubly_linked_list() {
         head = nullptr;
         tail = nullptr;
-
     }
 
     doubly_linked_list::doubly_linked_list(int input):doubly_linked_list() {

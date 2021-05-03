@@ -437,7 +437,22 @@ namespace lab7 {
     }
 
     // Merge rhs into this. Demo to a TA for credit
+    tree merge_tree(tree left, node *right)
+    {
+        if(right == nullptr) {//check if right sub is empty
+            return left;
+        }
+        left = merge_tree(left, right->left);
+        left.insert(right->data);
+        left = merge_tree(left, right->right);
+
+        return left;
+
+    }
     tree tree::operator+(const tree &rhs) const {
+        tree left;
+        left.root = root;
+        return merge_tree(left, rhs.root);
 
     }
 

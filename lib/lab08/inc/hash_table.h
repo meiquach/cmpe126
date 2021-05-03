@@ -16,7 +16,8 @@ namespace lab8{
         unsigned max_size;
         unsigned current_size;
 
-        const int PRIMES[16] = {31, 67, 137, 277, 557, 1117, 2237, 4481, 8963, 17929, 35863, 71741, 143483, 286999, 574003, 1148029}; // PRIME[n+1]= next prime after 2*PRIME[n]. Use this for setting max size
+        const int PRIMES[16] = {31, 67, 137, 277, 557, 1117, 2237, 4481, 8963, 17929, 35863, 71741, 143483, 286999, 574003, 1148029};
+        // PRIME[n+1]= next prime after 2*PRIME[n]. Use this for setting max size
 
 
         unsigned hash_1(std::string to_hash);
