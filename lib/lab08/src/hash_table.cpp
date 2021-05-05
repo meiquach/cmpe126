@@ -1,5 +1,4 @@
 #include "../inc/hash_table.h"
-#include<iostream>
 #include <math.h>
 namespace lab8{
     unsigned hash_table::hash_1(std::string to_hash) {
@@ -24,6 +23,7 @@ namespace lab8{
     void hash_table::expand() {
         // Expand the hash table by a factor of 2 every time this function is called
         // Consider the table to be full at 70% of the largest max_size
+        // PRIME[n+1]= next prime after 2*PRIME[n]. Use this for setting max size
         if (max_size == PRIMES[15])
             throw "Table full";
 
@@ -31,7 +31,8 @@ namespace lab8{
         auto *prevTable = hash_table_array;
         unsigned prev_current_size = current_size;
 
-        // Get the next max_size, create a new array with the new max_size, and reset the size
+        // Get the next max_size
+        // create a new array with the new max_size, and reset the size
         for (unsigned PRIME : PRIMES)
             if (max_size < PRIME)
                 max_size = PRIME;

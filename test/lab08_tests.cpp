@@ -149,7 +149,7 @@ TEST_F(Lab08Fixture, removeTest) {
         tableq.remove(string_values[i]);
         tabled.remove(string_values[i]);
     }
-
+    
     // Empty Table, so we expect throw on every query
     for (int i = 0; i < max_size; i++) {
         EXPECT_ANY_THROW(tablel.get(string_values[i]));

@@ -30,18 +30,14 @@ namespace lab6{
     }
 
     doubly_linked_list::~doubly_linked_list() { //delete every single nodes
-        /*node *temp;
-        while (head) {
-            temp = head;
-            head = head->next;
-            delete temp;
-        }*/
         while(head != nullptr){
             remove(0);
         }
     }
 
     int doubly_linked_list::get_data(unsigned position) {
+        if (is_empty())
+            throw -1;
         node *temp = head;
         int result;
         if (position >= size()){
@@ -51,6 +47,7 @@ namespace lab6{
             temp = temp->next;
         }
         return result = temp->get_data();
+
     }
 
     std::vector<int> doubly_linked_list::get_set(unsigned position_from, unsigned position_to) {
@@ -83,14 +80,11 @@ namespace lab6{
     }
 
     bool doubly_linked_list::is_empty() {
-        if(size()==0){
-            return true;
-        }
-        return false;
+        return head == nullptr;
     }
 
     void doubly_linked_list::append(int input) {
-        /*node *temp = new node(input);
+        node *temp = new node(input);
         node *current = head;
         if (!is_empty()){
             while(current->next != nullptr){
@@ -104,72 +98,57 @@ namespace lab6{
         else {
             head = temp;
             tail = temp;
-        }*/
-        if (head == nullptr) {
-            head = new node(input);
-            tail = head;
-        } else {
-            tail->next = new node(input);
-            tail->next->prev = tail;
-            tail = tail->next;
         }
-
     }
 
     void doubly_linked_list::insert(int input, unsigned int location) {
-        node *current = head;
-        node *prev = nullptr;
-        node *new_node = new node(input);
-        if (head == nullptr){  //if it's empty
-            head = new_node;
-            tail = head;
-            return;
-        }
-        else{
-            node *p1 = head;
-            int x = 0;
-            if (location == 0){      //insert at the head of the list
-                new_node->next = head;
-                head->prev = new_node;
-                head = new_node;
-                return;
-            }
-            else if (location == size() - 1){   //insert at the end of the list
-                while(p1->next != nullptr){
-                    p1 = p1->next;
-                }
-                tail = p1;
-                node *p2 = p1->prev;
-                p2->next = new_node;
-                new_node->prev = p2;
-                new_node->next = p1;
-                p1->prev = new_node;
+        if (head == nullptr) {
+            if (location == 0)
+                append(input);
+            else throw -1;
 
+        } else if (location == 0) {
+            // Put a new node before the head and update the head
+            head->prev = new node(input);
+            head->prev->next = head;
+            head = head->prev;
+        } else {
+            // To be inserted node is the node before the index pos
+            node *in_front = head;
+            for (unsigned i = 0; i < location - 1; i++) {
+                in_front = in_front->next;
+                if (!in_front)
+                    throw -1;
             }
-            else{
-                while(p1->next != nullptr && x<location){
-                    p1 = p1->next;
-                    x++;
-                }
-                node *p2 = p1->next;
-                p1->next = new_node;
-                new_node->prev = p1;
-                new_node->next = p2;
-                p2->prev = new_node;
-            }
+            // make a connection, the inserted node point backwards to in_front node and forwards to the node after
+            node *inserted = new node(input);
+            inserted->next = in_front->next;
+            inserted->prev = in_front;
+            inserted->prev->next = inserted;  // Make the node before point forwards to the node after
+
+            // Make the node after point backwards to the node in_front
+            // reach the end no more node, then update tail
+            if (inserted->next) {
+                inserted->next->prev = inserted;
+            }else
+                tail = inserted;
         }
+
     }
 
     void doubly_linked_list::remove(unsigned location) {
+        if(is_empty())
+            throw -1;
         node *prev = nullptr;
-        node *current;
-        current = head;
-        if (location>size()){
+        node *current = head;
+        if (location > size()){
             throw -1;
         }
         for(int i = 0; i< location; i++){
             prev = current;
             current = current->next;
+            if(!current)
+                throw -1;
         }
         if (prev) { // edge case for a previous node
             if(!current->next){
@@ -189,11 +168,14 @@ namespace lab6{
     }
 
     doubly_linked_list doubly_linked_list::split(unsigned position) {
+        if (is_empty())
+            throw -1;
         doubly_linked_list split(get_set(position, size() - 1));
         for(int i = size() - 1; i >= position && i >=0; i--){
             remove(i);
         }
         return split;
+
     }
 
     doubly_linked_list doubly_linked_list::split_set(unsigned position_1, unsigned position_2) {
@@ -211,7 +193,7 @@ namespace lab6{
             temp2 = temp2->next;
         }
         split_set.append(temp2->get_data());
-        for(int i = position_2; i >= position_1; i--){
+        for(int i = position_2; i >= int(position_1); i--){
             remove(i);
         }
         return split_set;
@@ -219,115 +201,20 @@ namespace lab6{
     }
 
     void doubly_linked_list::swap(unsigned position_1, unsigned position_2) {
-        if(position_1 > position_2){    //makes sure that position one always comes before position2
-            int temp = position_1;
-            position_1 = position_2;
-            position_2 = temp;
+        // Swap wrongly ordered indices and check for same indices
+        if (position_1 > position_2)
+            std::swap(position_1, position_2);
+        else if (position_1 == position_2) {
+            if (position_1 >= size())
+                throw -1;
+            return;
         }
-
-        if(position_1 == position_2){
-            throw -1;
-        }
-
-        node* tempA = head;
-        for(int i=0; i<position_1; i++) {
-            tempA = tempA->next;
-        }
-
-        node* tempB = tempA;
-        for(int i=position_1; i<position_2; i++){
-            tempB = tempB->next;
-        }
-
-        node* tempAprev = tempA->prev;
-        node* tempAnext = tempA->next;
-        node* tempBprev = tempB->prev;
-        node* tempBnext = tempB->next;
-
-        if(tempAnext == tempB && tempAprev != nullptr && tempBnext != nullptr){   //swaps the elements that are next to each other
-            tempAprev->next = tempB;
-            tempB->prev = tempAprev;
-            tempB->next = tempA;
-            tempA->prev = tempB;
-            tempA->next = tempBnext;
-            tempBnext->prev = tempA;
-        }
-
-        else if(tempAprev == nullptr && tempBnext == nullptr){ //edge case for swapping head and tail
-            if(size()==2){
-                tempB->next = tempA;
-                tempA->prev = tempB;
-                tempA->next = nullptr;
-                tempB->prev = nullptr;
-                head = tempB;
-                tail = tempA;
-            }
-            else {
-                tempA->prev = tempBprev;
-                tempA->next = nullptr;
-                tempBprev->next = tempA;
-                tempB->prev = nullptr;
-                tempB->next = tempAnext;
-                tempAnext->prev = tempB;
-                head = tempB;
-                tail = tempA;
-            }
-        }
-
-        else if(tempAprev == nullptr && tempBnext != nullptr){    // edge case for swapping head and not tail
-
-            if(tempAnext == tempB){
-                tempA->prev = tempB;
-                tempA->next = tempBnext;
-                tempBnext->prev = tempA;
-                tempB->prev = nullptr;
-                head = tempB;
-
-            }
-            else {
-                tempAnext->prev = tempB;
-                tempBprev->next = tempA;
-                tempBnext->prev = tempA;
-                tempA->prev = tempBprev;
-                tempB->prev = nullptr;
-                tempA->next = tempBnext;
-                tempB->next = tempAnext;
-                head = tempB;
-            }
-        }
-
-        else if(tempAprev != nullptr && tempBnext == nullptr){    //edge case for swapping tail and not head
-
-            if(tempAnext == tempB) {
-                tempAprev->next = tempB;
-                tempB->prev = tempAprev;
-                tempB->next = tempA;
-                tempA->prev = tempB;
-                tempA->next = nullptr;
-                tail = tempA;
-            }
-            else{
-                tempAprev->next = tempB;
-                tempB->prev = tempAprev;
-                tempB->next = tempAnext;
-                tempAnext->prev = tempB;
-                tempBprev->next = tempA;
-                tempA->prev = tempBprev;
-                tempA->next = nullptr;
-                tail = tempA;
-            }
-        }
-
-        else {                  //if no edge cases apply
-            tempAprev->next = tempB;
-            tempAnext->prev = tempB;
-            tempBprev->next = tempA;
-            tempBnext->prev = tempA;
-            tempA->prev = tempBprev;
-            tempB->prev = tempAprev;
-            tempA->next = tempBnext;
-            tempB->next = tempAnext;
-        }
+        int listOne = get_data(position_1);
+        int listTwo = get_data(position_2);
+        remove(position_1);
+        remove(position_2 - 1);
+        insert(listOne, position_2 - 1);
+        insert(listTwo, position_1);
 
     }
 
@@ -388,7 +275,8 @@ namespace lab6{
             tempB->next = tempCnext;
             tempCnext->prev = tempB;
         }
-        else if(tempAprev == nullptr && tempCnext != nullptr){                       //edge case for swapping set with head and another set that does not have a tail
+        else if(tempAprev == nullptr && tempCnext != nullptr){
+            //edge case for swapping set with head and another set that does not have a tail
             if(tempAnext == tempD || tempBprev == tempD){
                 tempC->prev = nullptr;
                 tempD->next = tempA;
@@ -458,98 +346,38 @@ namespace lab6{
             tempB->next = tempCnext;
             tempCnext->prev = tempB;
         }
-
     }
 
     void doubly_linked_list::sort() {
-        /*if (!is_empty()){
-            node* prev = head;
-            node* current = prev->next;
-            node* temp = current;
-            int prev_location = 0;
-            int current_location = 1;
-            while (current != nullptr) {      //if so, then out of bounds or empty list.
-                current = current->next;
-                int temp_location = current_location;
-                int temp_location2 = prev_location;
-                while(temp->prev != nullptr && temp->get_data() < temp->prev->get_data()){
-                    swap(temp_location,temp_location2);
-                    temp_location--;
-                    temp_location2--;
-                }
-                current_location++;
-                prev_location++;
-            }
+        unsigned listSize = size();
+        if (listSize == 0) return;
+        for (unsigned current = 0; current < listSize - 1; current++) {
+            unsigned smallest = current;
+            for (unsigned candidate = current + 1; candidate < listSize; candidate++)
+                if (get_data(candidate) < get_data(smallest))
+                    smallest = candidate;
+            swap(current, smallest);
         }
-        throw "list is empty";*/
-        node *sort_list = nullptr;
-        node *current = head;
-
-        while (current != nullptr)
-        {
-            node *next = current->next; // tracer points to next node
-
-            current->prev = current->next = nullptr;  // extract node from list
-
-            node *tracer; // tracer for sorted list
-
-            if (sort_list == nullptr)
-            {
-                sort_list = current;
-            }
-            else if (sort_list->get_data() >= current->get_data())
-            {
-                current->next = sort_list;
-                current->next->prev = current;
-                sort_list = current;
-            }
-            else
-            {
-                tracer = sort_list;
-
-                while (tracer->next != nullptr && tracer->next->get_data() < current->get_data())
-                    tracer = tracer->next;
-
-                current->next = tracer->next;
-
-                if (tracer->next != nullptr)
-                    current->next->prev = current;
-
-                tracer->next = current;
-                current->prev = tracer;
-            }
-
-            current = next;
-        }
-
-        head = sort_list;
-
-        node *temp = head;
-        while (temp != nullptr)
-        {
-            temp = temp->next;
-        }
-        tail = temp;
     }
 
     doubly_linked_list doubly_linked_list::operator+(const doubly_linked_list &rhs) const {
-        doubly_linked_list final;
-        node *temp = this->head;
-        node *rhs_temp = rhs.head;
-        while(temp != nullptr){
-            final.append(temp->get_data());
-            temp = temp->next;
-        }
-        while(rhs_temp != nullptr){
-            final.append(rhs_temp->get_data());
-            rhs_temp = rhs_temp->next;
-        }
-        return final;
-
+        doubly_linked_list list(*this);
+        list += rhs;
+        return list;
     }
 
     doubly_linked_list& doubly_linked_list::operator=(const doubly_linked_list &rhs) {
-        while(!this->is_empty()){
+        if (this == &rhs) {
+            return *this;
+        }
+        // not empty then delete
+        while (!is_empty())
+            remove(0);
+        // Copy the values from the rhs list to this list
+        *this += rhs;
+        return *this;
+
+        /*while(!this->is_empty()){
             this->remove(0);
         }
         node* copy = rhs.head;
@@ -557,11 +385,11 @@ namespace lab6{
             this->append(copy->get_data());
             copy = copy->next;
         }
-        return *this;
+        return *this;*/
 
     }
 
-    doubly_linked_list& doubly_linked_list::operator+=(const doubly_linked_list &rhs) {
+    doubly_linked_list& doubly_linked_list::operator+=(const doubly_linked_list &rhs) {;
         node *rhs_temp = rhs.head;
         while(rhs_temp != nullptr){
             this->append(rhs_temp->get_data());
@@ -585,7 +413,6 @@ namespace lab6{
             if (lh == nullptr && rh == nullptr) done = true;
         }
         return true;
-
     }
 
     std::ostream &operator<<(std::ostream &stream, doubly_linked_list &RHS) {
